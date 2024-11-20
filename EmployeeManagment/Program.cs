@@ -1,4 +1,5 @@
 using EmployeeManagment.Data;
+using EmployeeManagment.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.InMemory;
 
@@ -9,6 +10,7 @@ namespace EmployeeManagment
     {
         public static void Main(string[] args)
         {
+            // before building the app
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddDbContext<AppDbContext>(
@@ -25,6 +27,11 @@ namespace EmployeeManagment
                 });
             });
 
+            // add the employee repository to the DI (Dependency-Injection)
+            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            builder.Services.AddControllers();
+
+            // build App
             var app = builder.Build();
 
             app.UseCors("MyCors");
