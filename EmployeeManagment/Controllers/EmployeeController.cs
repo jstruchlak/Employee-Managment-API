@@ -30,7 +30,7 @@ namespace EmployeeManagment.Controller
             { 
                 return NotFound();
             }
-            return Ok();
+            return Ok(employee);
         }
 
         [HttpDelete("{id}")]
@@ -48,6 +48,12 @@ namespace EmployeeManagment.Controller
                 return BadRequest();
             }
 
+            // checking model data annotations
+            if (ModelState.IsValid == false)
+            {
+                return BadRequest();
+            }
+
             await _employeeRepository.UpdateEmployeeAsync(employee);
             // 201(CREATED) Created response with the new employee's details and a link to fetch it by ID.
             return CreatedAtAction(nameof(GetEmployeeById), new { id = employee.Id }, employee);
@@ -56,8 +62,13 @@ namespace EmployeeManagment.Controller
         [HttpPost]
         public async Task<ActionResult<Employee>> CreateEmployee(Employee employee)
         {
-            await _employeeRepository.AddEmployeeAsync(employee);
+            // checking model data annotations
+            if(ModelState.IsValid == false)
+            {
+                return BadRequest();
+            }
 
+            await _employeeRepository.AddEmployeeAsync(employee);
             // 201(CREATED) Created response with the new employee's details and a link to fetch it by ID.
             return CreatedAtAction(nameof(GetEmployeeById), new {id = employee.Id}, employee);
         }
