@@ -1,7 +1,7 @@
 using EmployeeManagment.Data;
 using EmployeeManagment.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.InMemory;
+
 
 
 namespace EmployeeManagment
@@ -13,8 +13,10 @@ namespace EmployeeManagment
             // before building the app
             var builder = WebApplication.CreateBuilder(args);
 
+            // db connection
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddDbContext<AppDbContext>(
-                options => options.UseInMemoryDatabase("EmployeeDb")
+                options => options.UseSqlServer(connectionString)
                 );
 
             builder.Services.AddCors(options =>
